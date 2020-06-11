@@ -24,23 +24,26 @@ const ValidatorLine = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-left: 2rem;
 
-  @media only screen and (max-width: 1024px) {
+  @media only screen and (max-width: 64rem) {
       margin-bottom: 1rem;
       display: block;
   }
 `
 
 const ValidatorContent = styled.div`
-  margin-right: 1rem;
-  @media only screen and (max-width: 1024px) {
+  
+  min-width: 15.75rem;
+  @media only screen and (max-width: 64rem) {
       overflow-wrap:break-word;
       word-break: break-word;
       display: block;
       margin-bottom: 0.25rem;
+      min-width: 100%;
   }
 `
+
+const Signature = styled(ValidatorContent)`min-width: 40.25rem;`
 
 const ValidIndicator = styled.div<{ validationState: string }>`
   color: ${props => props.validationState === 'valid sig' ? "green" : props.validationState === 'invalid' ? "red" : "grey"};
@@ -51,11 +54,12 @@ const Content = styled.div`
   font-family: monospace;
   font-size: 0.75rem;
   max-width: 1024px;
+  margin: 2rem;
 `
 
 const PreimageContent = styled.div`
   white-space: pre-line;
-  margin: 2rem 0 2rem 2rem;
+  margin-bottom: 2rem;
 `
 
 const AppContainer = styled.div`
@@ -97,7 +101,7 @@ const reducer = (state:Array<WorkQueueItem>, {type, payload}: {type: string, pay
 const Validator: FC<ValidatorProps> = ({address, signature, validationState="validating"}) => {
   return (<ValidatorLine>
       <ValidatorContent>{address}</ValidatorContent>
-      <ValidatorContent>{signature}</ValidatorContent>
+      <Signature>{signature}</Signature>
       <ValidIndicator validationState={validationState}>{validationState}</ValidIndicator>
   </ValidatorLine>)
 }

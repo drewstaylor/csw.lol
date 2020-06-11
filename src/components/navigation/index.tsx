@@ -29,6 +29,11 @@ const NavigationContainerRight = styled.ul`
     > li {
         padding: 0.125rem 0;
         margin-left: 0 1.25rem;
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
     }
 `
 
@@ -38,7 +43,7 @@ export const Navigation: FC = () => (
             craigwright.lol
         </NavigationContainerLeft>
         <NavigationContainerRight>
-            {/* <li>About</li> */}
+            <li><a href="https://www.github.com/initfortherekt/csw.lol">Github</a></li>
         </NavigationContainerRight>
     </NavigationContainer>
    
