@@ -1,0 +1,8 @@
+html { 
+  font-size: 16px;
+}
+
+/* Remove default margin */
+body {
+  margin: 0;
+}
