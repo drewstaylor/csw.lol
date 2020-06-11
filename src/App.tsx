@@ -1,17 +1,17 @@
 import React, { useMemo, useReducer, useEffect, FC } from 'react';
 import { Navigation } from './components/navigation';
-import { data } from './components/signature/data'
+import { data } from './data'
 import styled from 'styled-components';
 // @ts-ignore 
 import * as bitcoinMessage from 'bitcoinjs-message'
 
+type ValidationState = 'invalid'| 'waiting' | 'validating' | 'valid sig'
 
 interface ValidatorProps {
   address: string
   signature: string
   validationState: string
 }
-
 
 interface WorkQueueItem {
   id: number
@@ -43,7 +43,15 @@ const ValidatorContent = styled.div`
   }
 `
 
-const Signature = styled(ValidatorContent)`min-width: 40.25rem;`
+const Signature = styled(ValidatorContent)`min-width: 40.25rem;
+
+@media only screen and (max-width: 64rem) {
+  overflow-wrap:break-word;
+  word-break: break-word;
+  display: block;
+  margin-bottom: 0.25rem;
+  min-width: 100%;
+}`
 
 const ValidIndicator = styled.div<{ validationState: string }>`
   color: ${props => props.validationState === 'valid sig' ? "green" : props.validationState === 'invalid' ? "red" : "grey"};
@@ -54,7 +62,7 @@ const Content = styled.div`
   font-family: monospace;
   font-size: 0.75rem;
   max-width: 1024px;
-  margin: 2rem;
+  margin: 1.625rem;
 `
 
 const PreimageContent = styled.div`
@@ -88,8 +96,6 @@ const shuffle = (data: any[]) => {
   }
   return work
 }
-
-type ValidationState = 'invalid'| 'waiting' | 'validating' | 'valid sig'
 
 const reducer = (state:Array<WorkQueueItem>, {type, payload}: {type: string, payload: number}): Array<WorkQueueItem> => {
   const left = state.slice(0, payload)
