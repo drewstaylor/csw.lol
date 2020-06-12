@@ -43,7 +43,7 @@ export const Navigation: FC = () => (
             craigwright.lol
         </NavigationContainerLeft>
         <NavigationContainerRight>
-            <li><a href="https://www.github.com/initfortherekt/csw.lol">Github</a></li>
+            <li><a href="https://www.github.com/initfortherekt/csw.lol">GitHub</a></li>
         </NavigationContainerRight>
     </NavigationContainer>
    

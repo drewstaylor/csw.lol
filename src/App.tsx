@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer, useEffect, FC } from 'react';
+import React, { useMemo, useReducer, useEffect, useLayoutEffect, FC, useState } from 'react';
 import { Navigation } from './components/navigation';
 import { data } from './data'
 import styled from 'styled-components';
@@ -10,7 +10,6 @@ type ValidationState = 'invalid'| 'waiting' | 'validating' | 'valid sig'
 interface ValidatorProps {
   address: string
   signature: string
-  validationState: string
 }
 
 interface WorkQueueItem {
@@ -82,30 +81,22 @@ Unfortunately, the solution is not to just change a constant in the code or to a
 
 We are all Satoshi`
 
-const validate = async (message:string, item: WorkQueueItem) => new Promise((resolve) => {
-  setTimeout(() => resolve(bitcoinMessage.verify(message, item.address, item.signature)), 250)
+const validate = async (message:string, address: string, signature: string, ) => new Promise((resolve) => {
+  setTimeout(() => resolve(bitcoinMessage.verify(message, address, signature)), Math.floor(Math.random() * 50) + 100)
 })
 
-const shuffle = (data: any[]) => {
-  const work = Array.from(Array(data.length).keys())
-  for(let i = work.length-1; i>=0; i--){
-    const j = Math.floor(Math.random() * i)
-    const temp = work[i]
-    work[i] = work[j]
-    work[j] = temp
-  }
-  return work
-}
+const Validator: FC<ValidatorProps> = ({address, signature}) => {
 
-const reducer = (state:Array<WorkQueueItem>, {type, payload}: {type: string, payload: number}): Array<WorkQueueItem> => {
-  const left = state.slice(0, payload)
-  const right = state.slice(payload+1)
-  const item: WorkQueueItem = { ...state[payload], validationState: type === 'queue' ? 'validating' : type === 'success' ? 'valid sig' : 'invalid' }
-  return [...left, item, ...right]
-}
+  const [validationState, setValidationState] = useState("validating")
 
-const Validator: FC<ValidatorProps> = ({address, signature, validationState="validating"}) => {
-  return (<ValidatorLine>
+  useEffect( () => {
+    (async () => {
+      const isValid = await validate(M, address, signature)
+      setValidationState(isValid ? 'valid sig': 'invalid sig')
+    })();
+  }, [address, signature])
+
+  return (<ValidatorLine key={address}>
       <ValidatorContent>{address}</ValidatorContent>
       <Signature>{signature}</Signature>
       <ValidIndicator validationState={validationState}>{validationState}</ValidIndicator>
@@ -113,34 +104,22 @@ const Validator: FC<ValidatorProps> = ({address, signature, validationState="val
 }
 
 export const App = () => {
- 
-  const initialState = useMemo(() => data.map((d, i) => ({
-    id: i,
-    address: d[0],
-    signature: d[1],
-    validationState: 'waiting' as ValidationState
-  })), [])
-
-  const [state, dispatch] = useReducer(reducer, initialState)
-  const workOrder = useMemo( () => shuffle(data), [] )
-  
-  useEffect( () => {
-    (async function anyNameFunction() {
-      workOrder.forEach(async (i) => {
-        dispatch({type: 'queue', payload: i})
-        const isValid = await validate(M, state[i])
-        dispatch({type: isValid ? 'success': 'error', payload: i})
-      })
-    })();
-  }, [])
+  const initialState = useMemo(() => { 
+    console.log('useMemo initialState');
+    return data.map((d, i) => ({
+      id: i,
+      address: d[0],
+      signature: d[1],
+      validationState: 'waiting' as ValidationState
+  }))} , [])
 
   return (
     <AppContainer >
       <Navigation />
       <Content>
         <PreimageContent>{M}</PreimageContent>
-        {state.map( ({address, signature, validationState}, i) => {
-          return (<Validator key={i} address={address} signature={signature} validationState={validationState} />)
+        {initialState.map( ({address, signature, validationState}, i) => {
+          return (<Validator key={address} address={address} signature={signature} />)
         })}
       </Content>
     </AppContainer>
