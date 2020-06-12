@@ -4,7 +4,9 @@ The list of address/signature pairs was published 4 days after the submission of
 
 Exhibit 7 was a list of thousands of Bitcoin addresses, purported to reveal a cache of bitcoin controlled by a trust of which Wright claimed to be a beneficiary. 
 
-Each signature signs the following message:
+In public key cryptography, a message provided with a signature and a public key proves possession of the corresponding private key. Bitcoin ECDSA signatures contain enough information to derive the public key. Validating the signature against the public key and ensuring that a hash160 of the public key corresponds to the address proves that the owner can spend the bitcoin locked at the address. 
+
+While we do not know the identity of the private key holder, we can reasonably narrow it down to everyone in the world that isn't Craig Wright or his Tulip Trustees -- unless they actually wrote and signed the following message: 
 
 > Craig Steven Wright is a liar and a fraud. He doesn't have the keys used to sign this message.
 >
@@ -14,4 +16,4 @@ Each signature signs the following message:
 >
 > We are all Satoshi
 
-Validation of the signatures is a trivial operation, achieved using the [bitcoinjs-message library.](https://github.com/bitcoinjs/bitcoinjs-message).
+Validation of the signatures is a trivial operation, achieved using the [bitcoinjs-message library](https://github.com/bitcoinjs/bitcoinjs-message).
