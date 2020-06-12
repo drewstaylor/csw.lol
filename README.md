@@ -1,4 +1,4 @@
-This project exists to serve as a self-validating refutation of Craig Wright's claim to ownership of the private keys corresponding to 145 address/signature pairs anonymously published at https://paste.debian.net/plain/1148565 on 25 May 2020.
+This project is hosted at https://craigwright.lol and exists to serve as a self-validating refutation of Craig Wright's claim to ownership of the private keys corresponding to 145 address/signature pairs anonymously published at https://paste.debian.net/plain/1148565 on 25 May 2020.
 
 The list of address/signature pairs was published 4 days after the submission of [Docket 512 Exhibit 7](https://www.courtlistener.com/recap/gov.uscourts.flsd.521536/gov.uscourts.flsd.521536.512.7.pdf) in [Kleiman v. Wright](https://www.courtlistener.com/docket/6309656/kleiman-v-wright/) in the Southern District Court of Florida. 
 
