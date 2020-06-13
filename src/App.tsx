@@ -1,11 +1,17 @@
-import React, { useMemo, useReducer, useEffect, useLayoutEffect, FC, useState } from 'react';
-import { Navigation } from './components/navigation';
+import React, { useMemo, useEffect, FC, useState } from 'react';
+import { Navigation } from './Navigation';
+import { Verify } from './Verify'
 import { data } from './data'
 import styled from 'styled-components';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 // @ts-ignore 
 import * as bitcoinMessage from 'bitcoinjs-message'
 
-type ValidationState = 'invalid'| 'waiting' | 'validating' | 'valid sig'
+type ValidationState = 'invalid'| 'waiting' | 'validating' | 'valid'
 
 interface ValidatorProps {
   address: string
@@ -53,8 +59,7 @@ const Signature = styled(ValidatorContent)`min-width: 40.25rem;
 }`
 
 const ValidIndicator = styled.div<{ validationState: string }>`
-  color: ${props => props.validationState === 'valid sig' ? "green" : props.validationState === 'invalid' ? "red" : "grey"};
-
+  color: ${props => props.validationState === 'valid' ? "green" : props.validationState === 'invalid' ? "red" : "grey"};
 `
 
 const Content = styled.div`
@@ -87,12 +92,12 @@ const validate = async (message:string, address: string, signature: string, ) =>
 
 const Validator: FC<ValidatorProps> = ({address, signature}) => {
 
-  const [validationState, setValidationState] = useState("validating")
+  const [validationState, setValidationState] = useState("verifying")
 
   useEffect( () => {
     (async () => {
       const isValid = await validate(M, address, signature)
-      setValidationState(isValid ? 'valid sig': 'invalid sig')
+      setValidationState(isValid ? 'valid': 'invalid')
     })();
   }, [address, signature])
 
@@ -115,13 +120,24 @@ export const App = () => {
 
   return (
     <AppContainer >
-      <Navigation />
-      <Content>
-        <PreimageContent>{M}</PreimageContent>
-        {initialState.map( ({address, signature, validationState}, i) => {
-          return (<Validator key={address} address={address} signature={signature} />)
-        })}
-      </Content>
+
+      <Router>
+        <Navigation />
+        <Switch>
+        <Route path="/verify">
+            <Verify />
+          </Route>
+          <Route path="/">
+            <Content>
+              <PreimageContent>{M}</PreimageContent>
+              {initialState.map( ({address, signature, validationState}, i) => {
+                return (<Validator key={address} address={address} signature={signature} />)
+              })}
+            </Content>
+          </Route>
+
+        </Switch>
+      </Router>
     </AppContainer>
   );
 }
