@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useRef, useState } from "react";
 import styled from "styled-components";
-import { address } from "bitcoinjs-lib"
 // @ts-ignore 
 import * as bitcoinMessage from 'bitcoinjs-message'
 

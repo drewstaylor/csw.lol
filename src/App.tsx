@@ -4,14 +4,13 @@ import { Verify } from './Verify'
 import { data } from './data'
 import styled from 'styled-components';
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
 // @ts-ignore 
 import * as bitcoinMessage from 'bitcoinjs-message'
 
-type ValidationState = 'invalid'| 'waiting' | 'validating' | 'valid'
+type ValidationState = 'invalid' | 'waiting' | 'validating' | 'valid'
 
 interface ValidatorProps {
   address: string
@@ -86,59 +85,58 @@ Unfortunately, the solution is not to just change a constant in the code or to a
 
 We are all Satoshi`
 
-const validate = async (message:string, address: string, signature: string, ) => new Promise((resolve) => {
+const validate = async (message: string, address: string, signature: string,) => new Promise((resolve) => {
   setTimeout(() => resolve(bitcoinMessage.verify(message, address, signature)), Math.floor(Math.random() * 50) + 100)
 })
 
-const Validator: FC<ValidatorProps> = ({address, signature}) => {
+const Validator: FC<ValidatorProps> = ({ address, signature }) => {
 
   const [validationState, setValidationState] = useState("verifying")
 
-  useEffect( () => {
+  useEffect(() => {
     (async () => {
       const isValid = await validate(M, address, signature)
-      setValidationState(isValid ? 'valid': 'invalid')
+      setValidationState(isValid ? 'valid' : 'invalid')
     })();
   }, [address, signature])
 
   return (<ValidatorLine key={address}>
-      <ValidatorContent>{address}</ValidatorContent>
-      <Signature>{signature}</Signature>
-      <ValidIndicator validationState={validationState}>{validationState}</ValidIndicator>
+    <ValidatorContent>{address}</ValidatorContent>
+    <Signature>{signature}</Signature>
+    <ValidIndicator validationState={validationState}>{validationState}</ValidIndicator>
   </ValidatorLine>)
 }
 
 export const App = () => {
-  const initialState = useMemo(() => { 
+  const initialState = useMemo(() => {
     console.log('useMemo initialState');
     return data.map((d, i) => ({
       id: i,
       address: d[0],
       signature: d[1],
       validationState: 'waiting' as ValidationState
-  }))} , [])
+    }))
+  }, [])
 
   return (
     <AppContainer >
 
-      <Router>
-        <Navigation />
-        <Switch>
+      <Navigation />
+      <Switch>
         <Route path="/verify">
-            <Verify />
-          </Route>
-          <Route path="/">
-            <Content>
-              <PreimageContent>{M}</PreimageContent>
-              {initialState.map( ({address, signature, validationState}, i) => {
-                return (<Validator key={address} address={address} signature={signature} />)
-              })}
-            </Content>
-          </Route>
+          <Verify />
+        </Route>
+        <Route path="/">
+          <Content>
+            <PreimageContent>{M}</PreimageContent>
+            {initialState.map(({ address, signature, validationState }, i) => {
+              return (<Validator key={address} address={address} signature={signature} />)
+            })}
+          </Content>
+        </Route>
 
-        </Switch>
-      </Router>
-    </AppContainer>
+      </Switch>
+    </AppContainer >
   );
 }
 
