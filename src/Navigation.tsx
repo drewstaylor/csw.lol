@@ -82,6 +82,12 @@ const Menu = styled.i`
     } 
 `
 
+interface NavigationLinkProps {
+    to: string
+    text: string
+}
+
+
 export const Navigation: FC = () => {
 
     const [menuExpanded, setMenuExpanded] = useState(false)
@@ -89,7 +95,14 @@ export const Navigation: FC = () => {
         setMenuExpanded(!menuExpanded)
     }, [menuExpanded])
 
+    const onLinkClick = useCallback((e) => {
+        setMenuExpanded(false)
+    }, [setMenuExpanded])
     const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+    const NavLink = useCallback((props) => {
+        return (<Link onClick={onLinkClick} to={props.to}>{props.text}</Link>)
+    }, [onLinkClick])
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(max-width: 40rem)")
@@ -119,18 +132,16 @@ export const Navigation: FC = () => {
     return (
         < NavigationContainer >
             <NavigationContainerLeft>
-                <Link to="/">craigwright.lol</Link>
+                <NavLink to="/" text={"craigwright.lol"} />
                 <Menu onClick={onMenuToggle} className="fa fa-bars"></Menu>
             </NavigationContainerLeft>
             {((isSmallScreen && menuExpanded) || !isSmallScreen) && <NavigationContainerRight>
                 <ul>
-                    <li><Link to="/verify">Verify a Signature</Link></li>
+                    <li><NavLink to="/verify" text="Verify a Signature" /></li>
                     <li><a href="https://www.github.com/initfortherekt/csw.lol">GitHub</a></li>
-                    {/* <li><Link to="/about">About</Link></li> */}
                     <li></li>
                 </ul>
             </NavigationContainerRight>}
-
         </NavigationContainer >
     )
 }
