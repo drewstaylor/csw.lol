@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useRef, useState } from "react";
+import React, { FC, useCallback, useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 // @ts-ignore 
 import * as bitcoinMessage from 'bitcoinjs-message'
@@ -7,19 +7,29 @@ const Content = styled.div`
     margin: 2rem;
 `
 
+const FormElement = styled.div`margin-top: 1rem;`
+
 const Form = styled.form`
-    margin: 4rem 12rem;
+    margin: auto;
     & label {
-        font-size: 1.25rem;
+        font-size: 1rem;
+    }
+    display: flex;
+    flex-direction: column;
+    align-item: center;
+    max-width: 48rem;
+    ${FormElement}:first-child {
+        margin-top: 0;
     }
 `
 
 const TextInput = styled.input`
-    font-size: 1.25rem;
+    font-size: 1rem;
     box-shadow: rgba(0, 0, 0, 0.14) 0px 1px 2px 0px inset;
-    padding: 0 1.5rem;
+    box-sizing: border-box;
+    padding: 0.75rem;
     margin-top: 0.25rem;
-    height: 4rem;
+    // height: 2.5rem;
     width: 100%;
     border: 1px solid #cccccc;
     outline: none;
@@ -31,21 +41,35 @@ const TextInput = styled.input`
 `
 
 const TextArea = styled(TextInput).attrs(props => ({ as: 'textarea' }))`
-    padding-top: 1.25rem;
-    height: 12rem;
+    box-sizing: border-box;
+    padding 0.75rem;
+    height: 8rem;
+    border-radius: 0.1875rem;
+`
+
+const ButtonContainer = styled.div`
+    flex-direction: row;
+    margin-top: 0.75rem;
+    display: flex;
+    @media only screen and (max-width: 64rem){
+        flex-direction: column;
+        & button {
+            margin-right: 0;
+        }
+    }
 `
 
 const VerifyButton = styled.button`
     box-sizing: border-box;
-    margin-top: 2rem;
+    margin-top: 1rem;
     margin-right: 1.5rem;
-    padding: 0.75rem;
-    font-size: 1.25rem;
+    padding: 0.625rem;
+    font-size: 1rem;
     min-width: 6.5rem;
     background-color: #0275d8;
     color: white;
     border-color: rgb(45, 124, 194);
-    border-radius: 0.25rem;
+    border-radius: 0.1875rem;
     border-style: solid;
     font-weight: 800;
     outline: none;
@@ -72,12 +96,14 @@ const ClearButton = styled(VerifyButton)`
 `
 
 const Validation = styled.div<{ valid?: boolean }>`
-    font-size: 1.25rem;
-    color: ${props => props.valid ? '#55aa55' : '#ff0000'};
-    margin-top: 1rem;
+    background-color: ${props => props.valid ? '#d4edda' : '#f8d7da'};
+    border: 1px solid ${props => props.valid ? '#c3e6cb' : '#f5c6cb'};
+    padding: 0.75rem;
+    border-radius: 0.1875rem;
+    font-size: 1rem;
+    color: ${props => props.valid ? '#155724' : '#721c24'};
 `
 
-const FormElement = styled.div`margin-top: 1rem;`
 
 export interface VerifyProps {
     address?: string
@@ -92,12 +118,22 @@ export const Verify: FC<VerifyProps> = (props: VerifyProps) => {
     const signatureRef = useRef(null)
     const [validationState, setValidationState] = useState<{ valid?: boolean, message?: string }>({})
 
+    useEffect(() => {
+        console.log("validation: ", validationState.valid)
+        if (validationState.valid !== undefined) {
+            try {
+                window.scroll({ top: 0, left: 0 });
+            } catch (error) {
+                window.scrollTo(0, 0);
+            }
+        }
+    }, [validationState.valid]);
+
     const onClear = useCallback((event) => {
         setValidationState({ valid: undefined, message: undefined })
     }, [])
 
     const onVerify = useCallback((event) => {
-        console.log("verifying!")
         const address = (addressRef?.current || { value: '' }).value
         const message = (messageRef?.current || { value: '' }).value
         const signature = (signatureRef?.current || { value: '' }).value
@@ -115,13 +151,16 @@ export const Verify: FC<VerifyProps> = (props: VerifyProps) => {
 
     return (
         <Content>
+
             <Form >
+                {validationState.message && <Validation valid={validationState.valid}>{validationState.message}</Validation>}
                 <FormElement><label>Bitcoin Address<TextInput ref={addressRef} placeholder="1FeexV6bAHb8ybZjqQMjJrcCrHGW9sb6uF" /></label></FormElement>
                 <FormElement><label>Message<TextArea ref={messageRef} as="textarea" placeholder="Craig Steven Wright is a liar and a fraud. He doesn't have the keys used to sign this message." /></label></FormElement>
                 <FormElement><label>Signature<TextInput ref={signatureRef} placeholder="signature" /></label></FormElement>
-                <VerifyButton type="button" onClick={onVerify}>Verify</VerifyButton>
-                <ClearButton type="reset" onClick={onClear} >Clear</ClearButton>
-                {validationState.message && <Validation valid={validationState.valid}>{validationState.message}</Validation>}
+                <ButtonContainer>
+                    <VerifyButton type="button" onClick={onVerify}>Verify</VerifyButton>
+                    <ClearButton type="reset" onClick={onClear} >Clear</ClearButton>
+                </ButtonContainer>
             </Form>
         </Content >)
 }
