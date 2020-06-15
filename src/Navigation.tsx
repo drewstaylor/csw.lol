@@ -78,6 +78,8 @@ const NavigationContainerRight = styled.div`
 const Menu = styled.i`
     display: none;
     @media only screen and (max-width: 40rem) {
+        margin-top: 0.125rem;
+        font-size: 1.365rem;
         display: inline-block;
     } 
 `
@@ -139,7 +141,6 @@ export const Navigation: FC = () => {
                 <ul>
                     <li><NavLink to="/verify" text="Verify a Signature" /></li>
                     <li><a href="https://www.github.com/initfortherekt/csw.lol">GitHub</a></li>
-                    <li></li>
                 </ul>
             </NavigationContainerRight>}
         </NavigationContainer >
