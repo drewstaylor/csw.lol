@@ -140,6 +140,7 @@ export const Navigation: FC = () => {
             {((isSmallScreen && menuExpanded) || !isSmallScreen) && <NavigationContainerRight>
                 <ul>
                     <li><NavLink to="/verify" text="Verify a Signature" /></li>
+                    <li><a href="/original.txt">Original Text</a></li>
                     <li><a href="https://www.github.com/initfortherekt/csw.lol">GitHub</a></li>
                 </ul>
             </NavigationContainerRight>}
