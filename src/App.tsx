@@ -65,7 +65,9 @@ const Content = styled.div`
   font-family: monospace;
   font-size: 0.75rem;
   max-width: 1024px;
-  margin: 1.625rem;
+  margin: auto;
+  margin-top: 1.625rem;
+  margin-bottom: 1.625rem;
 `
 
 const PreimageContent = styled.div`
