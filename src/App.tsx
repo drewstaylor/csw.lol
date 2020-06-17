@@ -66,7 +66,6 @@ const Content = styled.div`
   font-size: 0.75rem;
   max-width: 1024px;
   margin: auto;
-  padding: 1rem;
   margin-top: 1.625rem;
   margin-bottom: 1.625rem;
   @media only screen and (max-width: 67.5rem) {
