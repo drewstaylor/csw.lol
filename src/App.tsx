@@ -69,6 +69,9 @@ const Content = styled.div`
   padding: 1rem;
   margin-top: 1.625rem;
   margin-bottom: 1.625rem;
+  @media only screen and (max-width: 67.5rem) {
+    margin: 1.625rem;
+  }
 `
 
 const PreimageContent = styled.div`
